@@ -26,6 +26,7 @@ CATEGORICAL_FEATURES = [
     "ADMINISTRATIVE_AREA_LEVEL_2",
 ]
 
+
 def remove_unused_columns(df: pd.DataFrame) -> pd.DataFrame:
     return df.drop(columns=COLUMNS_TO_DROP)
 
@@ -57,27 +58,32 @@ def build_preprocessor() -> ColumnTransformer:
 def preprocess(df: pd.DataFrame) -> pd.DataFrame:
     df = remove_unused_columns(df)
     df = remove_duplicates(df)
+
+    df = df.reset_index(drop=True)
+
     X = df.drop(columns=["PRICE"])
     y = df["PRICE"]
+
     preprocessor = build_preprocessor()
     X_processed = preprocessor.fit_transform(X)
+
     feature_names = preprocessor.get_feature_names_out()
+
     X_processed = pd.DataFrame(
         X_processed,
         columns=feature_names,
-        index=df.index,
     )
     processed_df = pd.concat(
         [
             X_processed,
-            y.reset_index(drop=True),
+            y,
         ],
         axis=1,
     )
     return processed_df
 
+
 if __name__ == "__main__":
-    
     INPUT_PATH = "preprocessing/ny_house_preprocessing.csv"
     OUTPUT_PATH = "ny_house_preprocessing.csv"
 
