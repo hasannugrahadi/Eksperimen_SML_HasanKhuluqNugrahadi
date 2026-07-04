@@ -28,7 +28,7 @@ jobs:
           
       - name: Run Preprocessing
         run: |
-          python preprocessing/automate_Hasan.py
+          python preprocessing/automate-Hasan.py
           
       - name: Commit Processed Dataset
         uses: stefanzweifel/git-auto-commit-action@v5
